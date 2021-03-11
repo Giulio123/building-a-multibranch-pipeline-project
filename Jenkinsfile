@@ -51,7 +51,7 @@ pipeline {
 
     post{
         always{
-            jiraSendBuildInfo branch: 'JJ_master', site: 'sugfdo.atlassian.net', issueKeys: ['JJ-2', 'JJ-3']
+            jiraSendBuildInfo site: 'sugfdo.atlassian.net'
         }
     }
 }

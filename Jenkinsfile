@@ -24,11 +24,7 @@ pipeline {
                 sh './jenkins/scripts/test.sh'
             }
         }
-        post{
-            always{
-                jiraSendBuildInfo branch: 'JJ_master', site: 'sugfdo.atlassian.net'
-            }
-        }
+
 
         /*stage('Deliver for development') {
             when {
@@ -51,5 +47,11 @@ pipeline {
                 sh './jenkins/scripts/kill.sh'
             }
         }*/
+    }
+
+    post{
+        always{
+            jiraSendBuildInfo branch: 'JJ_master', site: 'sugfdo.atlassian.net'
+        }
     }
 }

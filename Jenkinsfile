@@ -1,57 +1,41 @@
 pipeline {
- 
-    agent {
-        docker {
-            image 'node:6-alpine'
-            args '-p 3000:3000 -p 5000:5000' 
-        }
-    }
- 
-    environment {
-        CI = 'true'
-    }
- 
-    stages {
- 
-        stage('Build') {
-            steps {
-                sh 'npm install'
-            }
-        }
- 
-        stage('Test') {
-            steps {
-                sh './jenkins/scripts/test.sh'
-            }
-        }
-
-
-        /*stage('Deliver for development') {
+     agent any
+     stages {
+         stage('Build') {
+             steps {
+                 echo 'Building...'
+             }
+             post {
+                 always {
+                     jiraSendBuildInfo site: 'sugfdo.atlassian.net'
+                 }
+             }
+         }
+         stage('Deploy - Staging') {
+             when {
+                 branch 'JJ-4_try-deploy'
+             }
+             steps {
+                 echo 'Deploying to Staging from JJ-4_try-deploy...'
+             }
+             post {
+                 always {
+                     jiraSendDeploymentInfo site: 'sugfdo.atlassian.net', environmentId: 'us-stg-1', environmentName: 'us-stg-1', environmentType: 'staging'
+                 }
+             }
+         }
+         stage('Deploy - Production') {
             when {
-                branch 'development' 
+                branch 'JJ-4_try-deploy'
             }
             steps {
-                sh './jenkins/scripts/deliver-for-development.sh'
-                input message: 'Finished using the web site? (Click "Proceed" to continue)'
-                sh './jenkins/scripts/kill.sh'
+                echo 'Deploying to Production from JJ-4_try-deploy...'
             }
-        }
-        
-        stage('Deploy for production') {
-            when {
-                branch 'production'  
+            post {
+                always {
+                    jiraSendDeploymentInfo site: 'sugfdo.atlassian.net', environmentId: 'us-prod-1', environmentName: 'us-prod-1', environmentType: 'production'
+                }
             }
-            steps {
-                sh './jenkins/scripts/deploy-for-production.sh'
-                input message: 'Finished using the web site? (Click "Proceed" to continue)'
-                sh './jenkins/scripts/kill.sh'
-            }
-        }*/
-    }
-
-    post{
-        always{
-            jiraSendBuildInfo site: 'sugfdo.atlassian.net'
-        }
-    }
-}
+         }
+     }
+ }

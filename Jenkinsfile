@@ -33,8 +33,15 @@ pipeline {
             }
             post {
                 always {
-                    jiraSendDeploymentInfo site: 'sugfdo.atlassian.net', environmentId: 'us-prod-1', environmentName: 'us-prod-1', environmentType: 'production'
-                    jiraSendDeploymentInfo site: 'sugfdo.atlassian.net', environmentId: 'us-prod-1', environmentName: 'us-prod-1', environmentType: 'production'
+                    jiraSendDeploymentInfo site: 'sugfdo.atlassian.net', 
+                    environmentId: 'us-prod-1', 
+                    environmentName: 'us-prod-1', 
+                    environmentType: 'production'
+                    jiraSendDeploymentInfo site: 'sugfdo.atlassian.net', 
+                    issueKeys: ['JJ-4'], 
+                    environmentId: 'us-prod-1', 
+                    environmentName: 'us-prod-1', 
+                    environmentType: 'production'
                 }
             }
          }
